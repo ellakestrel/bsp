@@ -2,10 +2,22 @@
 //
 
 #include <iostream>
+#include "BSPTree.h"
 
 int main()
 {
     std::cout << "Hello World!\n";
+    //Line2D line1 = Line2D(1, 1, 2, 2);
+    //Line2D line2 = Line2D(4, 4, 5, 5);
+    Line2D line1 = Line2D(3, 4, 0, 0);
+    Line2D line2 = Line2D(0, 3, 3, 0);
+    Point2D i = Point2D();
+    bool intersection_exists = line1.get_intersection(line2, i);
+    if (!intersection_exists) {
+		std::cout << "Parallel" << std::endl;
+    } else {
+		std::cout << "Intersection: " << i.x << ", " << i.y << std::endl;
+    }
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu

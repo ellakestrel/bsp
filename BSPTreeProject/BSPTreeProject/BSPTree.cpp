@@ -20,4 +20,5 @@ BSPNode BSPTree::create_tree_rec(std::vector<Wall> walls) {
 	// 5. n.back = create_tree_rec(back)
 	// 6. n.front = create_tree_rec(front)
 	// 7. return n
+	return { NULL, NULL, {} };
 }
