@@ -10,5 +10,6 @@ class Map
 public:
 	Map(float width, float height);
 	void add_wall(Wall wall);
+	std::vector<Wall> get_walls() const;
 };
 
