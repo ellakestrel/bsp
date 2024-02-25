@@ -4,17 +4,19 @@
 
 struct BSPNode
 {
-	BSPNode* back;
-	BSPNode* front;
+	BSPNode* n_back;
+	BSPNode* n_front;
 	std::vector<Wall> walls;
 };
 
 class BSPTree
 {
-	std::vector<BSPNode> nodes;
+	BSPNode* root;
 public:
 	BSPTree();
-	void create_tree(Map& map);
+	~BSPTree();
+	void create_tree(const Map& map);
 private:
-	BSPNode create_tree_rec(std::vector<Wall> walls);
+	BSPNode* create_tree_rec(const std::vector<Wall>& walls);
+	void destroy_tree_rec(BSPNode* node);
 };

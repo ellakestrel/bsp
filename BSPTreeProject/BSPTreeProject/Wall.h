@@ -10,8 +10,8 @@ class Wall
 	float normal_x;
 	float normal_y;
 public:
-	Wall(Line2D line, float normal_x, float normal_y);
-	RelPos get_relative_position(const Point2D point) const;
+	Wall(const Line2D& line, float normal_x, float normal_y);
+	RelPos get_relative_position(const Point2D& point) const;
 	RelPos get_relative_position(const Line2D& line_segment) const;
 	RelPos get_relative_position(const Wall& segment) const;
 	bool split(const Wall& wall, Wall& back_wall, Wall& front_wall) const;

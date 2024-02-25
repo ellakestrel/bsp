@@ -19,6 +19,9 @@ int main()
 	std::cout << "Pos: " << pos1 << std::endl;
     RelPos pos2 = walls[3].get_relative_position(walls[0]);
 	std::cout << "Pos: " << pos2 << std::endl;
+
+    BSPTree tree = BSPTree();
+    tree.create_tree(test_map);
 }
 
 void test1()

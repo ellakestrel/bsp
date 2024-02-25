@@ -1,8 +1,8 @@
 #include "Wall.h"
 
-Wall::Wall(Line2D l, float nx, float ny) : line(l), normal_x(nx), normal_y(ny) {};
+Wall::Wall(const Line2D& l, float nx, float ny) : line(l), normal_x(nx), normal_y(ny) {};
 
-RelPos Wall::get_relative_position(Point2D point) const
+RelPos Wall::get_relative_position(const Point2D& point) const
 {
 	Point2D p1 = line.p1();
 	float dot = (point.x - p1.x) * normal_x + (point.y - p1.y) * normal_y;
