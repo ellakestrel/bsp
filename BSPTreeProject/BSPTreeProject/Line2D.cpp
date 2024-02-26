@@ -19,3 +19,8 @@ bool Line2D::get_intersection(const Line2D& line, Point2D& intersection) const
 	intersection.y = y1 + u * (y2 - y1);
 	return true;
 }
+
+std::ostream& operator<<(std::ostream& os, const Point2D& point) {
+	os << "(" << point.x << ", " << point.y << ")";
+	return os;
+}

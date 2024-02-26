@@ -64,16 +64,16 @@ bool BSPTree::raycast(const Point2D& origin, const Point2D& direction, float max
 	float magnitude = std::sqrt(direction.x * direction.x + direction.y * direction.y);
 	Point2D n_direction = { direction.x / magnitude, direction.y / magnitude };
 	// multiply by max_distance and add origin
-	Point2D endpoint = { n_direction.x * max_distance + origin.x, n_direction.y * max_distance + origin.x };
+	Point2D endpoint = { n_direction.x * max_distance + origin.x, n_direction.y * max_distance + origin.y };
 
 	return raycast_rec(root, origin, endpoint, hit);
 }
 
 /* Note: if endpoint is touching the wall but does not cross it, it does not count as a hit */
-bool BSPTree::raycast_rec(BSPNode* n, const Point2D& origin, const Point2D& endpoint, Wall& hit) const
+bool BSPTree::raycast_rec(const BSPNode* n, const Point2D& origin, const Point2D& endpoint, Wall& hit) const
 {
 	if (n == NULL) return false;
-	Wall& w = n->walls[0];
+	const Wall& w = n->walls[0];
 
 	Line2D path = { origin, endpoint };
 	RelPos pos = w.get_relative_position(path);
@@ -97,7 +97,7 @@ bool BSPTree::raycast_rec(BSPNode* n, const Point2D& origin, const Point2D& endp
 
 	// check if path hits any walls at node n
 	//    we know the line intersection is at p_i, but this might not be in the wall.
-	for (Wall& wall : n->walls) {
+	for (const Wall& wall : n->walls) {
 		// check if p_i is on the line segment of wall
 		float wx1 = wall.get_line().p1().x;
 		float wx2 = wall.get_line().p2().x;

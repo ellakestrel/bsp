@@ -51,3 +51,10 @@ bool Wall::split(const Wall& wall, Wall& back_wall, Wall& front_wall) const
 	front_wall = Wall( { p_i, p_front }, wall.normal_x, wall.normal_y);
 	return true;
 }
+
+std::ostream& operator<<(std::ostream& os, const Wall& wall) {
+	const Line2D& l = wall.line;
+	os << "Endpoints: " << l.p1() << ", " << l.p2() << ", ";
+	os << "Normal: (" << wall.normal_x << ", " << wall.normal_y << ")";
+	return os;
+}

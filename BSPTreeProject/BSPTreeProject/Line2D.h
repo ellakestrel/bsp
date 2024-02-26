@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 
 struct Point2D
 {
@@ -16,3 +17,4 @@ public:
 	Point2D p2() const;
 };
 
+std::ostream& operator<<(std::ostream& os, const Point2D& point);
