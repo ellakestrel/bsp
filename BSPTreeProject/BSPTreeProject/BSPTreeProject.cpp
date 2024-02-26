@@ -5,6 +5,7 @@
 #include "BSPTree.h"
 
 void test1();
+void test_raycast(const BSPTree& tree, const Point2D& origin, const Point2D& direction, float max_distance);
 
 int main()
 {
@@ -14,14 +15,26 @@ int main()
     test_map.add_wall(Wall({ 3, 1, 6, 4 }, -1, 1));
     test_map.add_wall(Wall({ 3, 1, 4, 0 }, -1, -1));
 
-    std::vector<Wall> walls = test_map.get_walls();
-    RelPos pos1 = walls[0].get_relative_position(walls[3]);
-	std::cout << "Pos: " << pos1 << std::endl;
-    RelPos pos2 = walls[3].get_relative_position(walls[0]);
-	std::cout << "Pos: " << pos2 << std::endl;
-
     BSPTree tree = BSPTree();
     tree.create_tree(test_map);
+    test_raycast(tree, { 1,1 }, { 1,1 }, 100);
+    test_raycast(tree, { 2,0 }, { 2,1 }, 100);
+    test_raycast(tree, { 1.25,0 }, { 1,1 }, 100);
+    test_raycast(tree, { 3.5,0 }, { 0,1 }, 100);
+    test_raycast(tree, { 3.5,6 }, { 0,-1 }, 100);
+}
+
+void test_raycast(const BSPTree& tree, const Point2D& origin, const Point2D& direction, float max_distance)
+{
+    Wall hit;
+    bool success = tree.raycast(origin, direction, max_distance, hit);
+    if (success) {
+		std::cout << "Hit: " << hit.get_line().p1().x << ", " << hit.get_line().p1().y;
+        std::cout <<    ", " << hit.get_line().p2().x << ", " << hit.get_line().p2().y << std::endl;
+    }
+    else {
+        std::cout << "No hit" << std::endl;
+    }
 }
 
 void test1()

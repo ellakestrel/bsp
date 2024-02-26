@@ -1,6 +1,8 @@
 #include "Wall.h"
 
+Wall::Wall() : line({ 0,0,1,0 }), normal_x(0), normal_y(1) {};
 Wall::Wall(const Line2D& l, float nx, float ny) : line(l), normal_x(nx), normal_y(ny) {};
+Line2D Wall::get_line() const { return line; }
 
 RelPos Wall::get_relative_position(const Point2D& point) const
 {

@@ -1,5 +1,6 @@
 #include "BSPTree.h"
 #include <iostream>
+#include <algorithm>
 
 BSPTree::BSPTree() { root = NULL; };
 BSPTree::~BSPTree()
@@ -55,4 +56,68 @@ BSPNode* BSPTree::create_tree_rec(const std::vector<Wall>& walls)
 	n->n_back = create_tree_rec(back_walls);
 	n->n_front = create_tree_rec(front_walls);
 	return n;
+}
+
+bool BSPTree::raycast(const Point2D& origin, const Point2D& direction, float max_distance, Wall& hit) const
+{
+	// normalize direction
+	float magnitude = std::sqrt(direction.x * direction.x + direction.y * direction.y);
+	Point2D n_direction = { direction.x / magnitude, direction.y / magnitude };
+	// multiply by max_distance and add origin
+	Point2D endpoint = { n_direction.x * max_distance + origin.x, n_direction.y * max_distance + origin.x };
+
+	return raycast_rec(root, origin, endpoint, hit);
+}
+
+/* Note: if endpoint is touching the wall but does not cross it, it does not count as a hit */
+bool BSPTree::raycast_rec(BSPNode* n, const Point2D& origin, const Point2D& endpoint, Wall& hit) const
+{
+	if (n == NULL) return false;
+	Wall& w = n->walls[0];
+
+	Line2D path = { origin, endpoint };
+	RelPos pos = w.get_relative_position(path);
+	if (pos == back) return raycast_rec(n->n_back, origin, endpoint, hit);
+	if (pos == front) return raycast_rec(n->n_front, origin, endpoint, hit);
+	if (pos == colinear) return raycast_rec(n->n_front, origin, endpoint, hit);
+
+	// path spans w
+	Point2D p_i;
+	path.get_intersection(w.get_line(), p_i);
+
+	// check first half of path
+	bool success = false;
+	if (w.get_relative_position(origin) == back) {
+		success = raycast_rec(n->n_back, origin, p_i, hit);
+	}
+	else {
+		success = raycast_rec(n->n_front, origin, p_i, hit);
+	}
+	if (success) return true;
+
+	// check if path hits any walls at node n
+	//    we know the line intersection is at p_i, but this might not be in the wall.
+	for (Wall& wall : n->walls) {
+		// check if p_i is on the line segment of wall
+		float wx1 = wall.get_line().p1().x;
+		float wx2 = wall.get_line().p2().x;
+		float wy1 = wall.get_line().p1().y;
+		float wy2 = wall.get_line().p2().y;
+		if (p_i.x <= std::max(wx1, wx2) && p_i.x >= std::min(wx1, wx2)
+			&& p_i.y <= std::max(wy1, wy2) && p_i.y >= std::min(wy1, wy2))
+		{
+			hit = wall;
+			return true;
+		}
+	}
+
+	// check second half of path
+	success = false;
+	if (w.get_relative_position(endpoint) == back) {
+		success = raycast_rec(n->n_back, p_i, endpoint, hit);
+	}
+	else {
+		success = raycast_rec(n->n_front, p_i, endpoint, hit);
+	}
+	return success;
 }
